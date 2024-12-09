@@ -1,31 +1,46 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useContext} from "react";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios"
+import {UserDataContext} from "../context/UserContext";
 
 const UserSignup = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [Firstname, setFirstName] = useState("");
-  const [Lastname, setLastName] = useState("");
+  const [firstname, setFirstName] = useState("");
+  const [lastname, setLastName] = useState("");
   const [userData, setUserData] = useState({});
 
-  const handleSubmit = (e) => {
+  
+  const navigate = useNavigate()
+
+  const { user, setUser } = useContext(UserDataContext)
+  
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setUserData({
+    const newUser = {
+      fullname: {
+        firstname: firstname,
+        lastname: lastname
+      },
       email: email,
-      password: password,
-      fullName:{
-        Firstname: Firstname,
-        Lastname: Lastname,
-      }
-    });
+      password: password
+    }
+
+     const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/users/register`,newUser)
+
+     if (response.status === 201) {
+       const data = response.data
+       setUser(data.user)
+       navigate("/home")
+     }
 
     // console.log(userData);
 
-    setEmail("");
-    setPassword("");
-    setFirstName("");
-    setLastName("");
-  };
+    setEmail("")
+    setFirstName("")
+    setLastName("")
+    setPassword("")
+  }
 
   return (
     <div className="p-8 h-screen flex flex-col justify-between">
@@ -43,7 +58,7 @@ const UserSignup = () => {
           <h3 className="text-xl font-medium">What's your name?</h3>
           <div className="flex gap-4">
             <input
-              value={Firstname}
+              value={firstname}
               onChange={(e) => {
                 setFirstName(e.target.value);
               }}
@@ -53,7 +68,7 @@ const UserSignup = () => {
               placeholder="Firstname"
             />
             <input
-              value={Lastname}
+              value={lastname}
               onChange={(e) => {
                 setLastName(e.target.value);
               }}
@@ -85,7 +100,7 @@ const UserSignup = () => {
             placeholder="Password"
           />
           <button className="w-full flex font-semibold justify-center items-center text-white rounded-md py-3 bg-black">
-            Sign up
+            Create account
           </button>
         </form>
         <p className="mt-4 text-center">
@@ -105,4 +120,4 @@ const UserSignup = () => {
     </div>
   );
 };
-export default UserSignup;
+export default UserSignup

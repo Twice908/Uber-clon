@@ -11,11 +11,11 @@ import UserLogout from './pages/UserLogout'
 import CaptainHome from "./pages/CaptainHome"
 import CaptainProtectWrapper from './pages/CaptainProtectWrapper'
 import CaptainLogout from './pages/CaptainLogout'
-import { UserDataContect } from "./context/userContext"
+import { UserDataContext } from "./context/UserContext"
 
 const App = () => {
 
-  const ans = useContext(UserDataContect)
+  const ans = useContext(UserDataContext)
   // console.log(ans);
   
   return (
